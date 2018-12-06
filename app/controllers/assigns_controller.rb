@@ -1,5 +1,6 @@
 class AssignsController < ApplicationController
   before_action :authenticate_user!
+  before_action :require_authority, only: :destroy
 
   def create
     team = Team.friendly.find(params[:team_id])
@@ -35,5 +36,13 @@ class AssignsController < ApplicationController
 
   def email_reliable?(address)
     address.match(/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i)
+  end
+
+  def require_authority
+    assign = Assign.find(params[:id])
+    assigned_user = assign.user
+    unless current_user.id == assigned_user.id || current_user.id == assign.team.owner_id
+      redirect_to team_path(assign.team_id), notice: '権限がありません'
+    end
   end
 end
