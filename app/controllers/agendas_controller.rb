@@ -24,8 +24,8 @@ class AgendasController < ApplicationController
 
   def destroy
     agenda = Agenda.find(params[:id])
-    agendas = agenda.all.includes(:team, :users)
     agenda.destroy
+    AgendaMailer.agenda_info_mail(agenda).deliver
     redirect_to dashboard_url, notice: "削除しました"
   end
 
