@@ -63,7 +63,7 @@ class TeamsController < ApplicationController
   end
 
   def team_params
-    params.fetch(:team, {}).permit %i[name icon icon_cache owner_id keep_team_id owner_id]
+    params.fetch(:team, {}).permit %i[name icon icon_cache owner_id keep_team_id]
   end
 
   def owner_param
@@ -72,8 +72,6 @@ class TeamsController < ApplicationController
 
   def require_owner
     team = Team.friendly.find(params[:id])
-    unless current_user.id == team.owner_id
-      redirect_to team_path(team.id), notice: '権限がありません'
-    end
+    redirect_to team_path(team.id), notice: '権限がありません' unless current_user.id == team.owner_id
   end
 end
