@@ -1,4 +1,5 @@
 class AssignsController < ApplicationController
+  include AssignsHelper
   before_action :authenticate_user!
   before_action :require_authority, only: :destroy
 
@@ -41,8 +42,6 @@ class AssignsController < ApplicationController
   def require_authority
     assign = Assign.find(params[:id])
     assigned_user = assign.user
-    unless current_user.id == assigned_user.id || current_user.id == assign.team.owner_id
-      redirect_to team_path(assign.team_id), notice: '権限がありません'
-    end
+    redirect_to team_path(assign.team_id), notice: '権限がありません' unless owner_or_yourself(assign)
   end
 end
