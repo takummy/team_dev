@@ -8,6 +8,6 @@ module AgendasHelper
   end
 
   def owner_or_author?(agenda)
-   current_user.id == agenda.user.id || current_user.id == agenda.team.owner.id
+    current_user.id == agenda.user.id || current_user.id == agenda.team.owner.id
   end
 end
